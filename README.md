@@ -1,6 +1,6 @@
 # hasura-ws
 
-## Getting starter
+## Getting started
 
 ```bash
 docker run -d --net=host \                                                              
