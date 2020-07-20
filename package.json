@@ -1,0 +1,68 @@
+{
+  "name": "hasura-ws",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "build": "babel src --out-dir dist",
+    "start": "yarn build && node dist/index.js",
+    "dev": "nodemon src/index.js --exec babel-node",
+    "prisma-deploy": "prisma introspect && prisma generate",
+    "prisma-ins": "prisma introspect",
+    "prisma-gen": "prisma generate",
+    "hasura-docker": "env-cmd -f .env docker-compose -f docker-compose.dev.yml up -d",
+    "api-docker-build": "env-cmd -f .env docker-compose -f docker-compose.dev.yml build api"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.{js,md,css,html}": [
+      "prettier"
+    ],
+    "yarn.lock": [
+      "git rm --cached"
+    ]
+  },
+  "dependencies": {
+    "@prisma/client": "2.0.1",
+    "bcrypt": "^5.0.0",
+    "body-parser": "1.19.0",
+    "chalk": "^4.1.0",
+    "dotenv": "^8.2.0",
+    "express": "4.17.1",
+    "express-validator": "^6.5.0",
+    "faker": "^4.1.0",
+    "jsonwebtoken": "^8.5.1",
+    "passport": "^0.4.1",
+    "passport-local": "^1.0.0",
+    "regenerator-runtime": "^0.13.5"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.10.3",
+    "@babel/core": "^7.10.3",
+    "@babel/node": "^7.10.3",
+    "@babel/preset-env": "^7.10.3",
+    "@babel/register": "^7.10.3",
+    "@babel/runtime": "^7.10.3",
+    "@prisma/cli": "^2.1.3",
+    "babel-eslint": "^10.1.0",
+    "babel-plugin-module-resolver": "^4.0.0",
+    "env-cmd": "^10.1.0",
+    "eslint": "^7.3.0",
+    "eslint-config-airbnb-base": "^14.2.0",
+    "eslint-config-prettier": "^6.11.0",
+    "eslint-plugin-babel": "^5.3.0",
+    "eslint-plugin-import": "^2.21.2",
+    "eslint-plugin-prettier": "^3.1.4",
+    "hasura-cli": "^1.2.2",
+    "husky": "^4.2.5",
+    "lint-staged": "^10.2.11",
+    "nodemon": "^2.0.4",
+    "prettier": "^2.0.5"
+  },
+  "engines": {
+    "node": ">=10.0.0"
+  }
+}

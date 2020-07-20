@@ -1,0 +1,51 @@
+version: '3.6'
+services:
+  postgres:
+    image: postgres:12.3
+    restart: always
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: hasura
+      POSTGRES_PASSWORD: hasurapassword
+      POSTGRES_DB: hasura_ws
+  api:
+    build: .
+    expose:
+      - ${API_PORT}
+    volumes:
+      - ./:/api
+      - /api/node_modules
+    ports:
+      - ${API_PORT}:${API_PORT}
+    depends_on:
+      - postgres
+    environment:
+      API_PORT: ${API_PORT}
+      DATABASE_URL: postgres://hasura:hasurapassword@postgres:5432/hasura_ws
+      ENCRYPTION_KEY: ${ENCRYPTION_KEY}
+      ACTION_SECRET: ${ACTION_SECRET}
+  graphql-engine:
+    image: hasura/graphql-engine:latest.cli-migrations-v2
+    volumes:
+      - ./hasura/migrations:/hasura-migrations
+      - ./hasura/metadata:/hasura-metadata
+    ports:
+      - ${HASURA_PORT}:${HASURA_PORT}
+    depends_on:
+      - api
+    links:
+      - 'api:action-server'
+    restart: always
+    environment:
+      HASURA_GRAPHQL_SERVER_PORT: ${HASURA_PORT}
+      HASURA_GRAPHQL_DATABASE_URL: postgres://hasura:hasurapassword@postgres:5432/hasura_ws
+      HASURA_GRAPHQL_ENABLE_CONSOLE: 'true'
+      HASURA_GRAPHQL_ENABLED_LOG_TYPES: startup, http-log, webhook-log, websocket-log, query-log
+      HASURA_GRAPHQL_JWT_SECRET: ${HASURA_GRAPHQL_JWT_SECRET}
+      HASURA_GRAPHQL_ACCESS_KEY: ${HASURA_GRAPHQL_ACCESS_KEY}
+      HASURA_GRAPHQL_UNAUTHORIZED_ROLE: public
+      ACTION_SECRET: ${ACTION_SECRET}
+      ACTION_BASE_ENDPOINT: http://action-server:${API_PORT}
+volumes:
+  db_data:

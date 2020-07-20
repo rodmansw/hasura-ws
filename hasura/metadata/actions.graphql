@@ -1,0 +1,24 @@
+type Mutation {
+  login(email: String!, password: String!): AuthOutput!
+}
+
+type Mutation {
+  signup(data: SignupInput!): AuthOutput
+}
+
+input LoginInput {
+  email: String!
+  password: String!
+}
+
+input SignupInput {
+  name: String!
+  surname: String!
+  email: String!
+  password: String!
+}
+
+type AuthOutput {
+  userId: uuid!
+  accessToken: String!
+}

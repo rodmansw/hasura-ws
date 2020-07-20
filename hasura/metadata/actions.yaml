@@ -1,0 +1,37 @@
+actions:
+- name: login
+  definition:
+    kind: synchronous
+    handler: '{{ACTION_BASE_ENDPOINT}}/auth/login'
+    headers:
+    - name: action_secret
+      value_from_env: ACTION_SECRET
+  permissions:
+  - role: public
+  - role: user
+- name: signup
+  definition:
+    kind: synchronous
+    handler: '{{ACTION_BASE_ENDPOINT}}/auth/signup'
+    headers:
+    - name: action_secret
+      value_from_env: ACTION_SECRET
+  permissions:
+  - role: public
+  - role: user
+custom_types:
+  enums: []
+  input_objects:
+  - name: LoginInput
+  - name: SignupInput
+  objects:
+  - name: AuthOutput
+    relationships:
+    - remote_table:
+        schema: public
+        name: users
+      name: user
+      type: object
+      field_mapping:
+        userId: id
+  scalars: []

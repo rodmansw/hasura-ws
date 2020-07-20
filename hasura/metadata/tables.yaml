@@ -1,0 +1,75 @@
+- table:
+    schema: public
+    name: categories
+  array_relationships:
+  - name: lesson_categories
+    using:
+      foreign_key_constraint_on:
+        column: category
+        table:
+          schema: public
+          name: lesson_categories
+- table:
+    schema: public
+    name: lesson_categories
+  object_relationships:
+  - name: categoryByCategory
+    using:
+      foreign_key_constraint_on: category
+  - name: school_lesson
+    using:
+      foreign_key_constraint_on: lesson
+- table:
+    schema: public
+    name: school_lessons
+  object_relationships:
+  - name: schoolBySchool
+    using:
+      foreign_key_constraint_on: school
+  array_relationships:
+  - name: lesson_categories
+    using:
+      foreign_key_constraint_on:
+        column: lesson
+        table:
+          schema: public
+          name: lesson_categories
+  - name: user_school_lessons
+    using:
+      foreign_key_constraint_on:
+        column: lesson
+        table:
+          schema: public
+          name: user_school_lessons
+- table:
+    schema: public
+    name: schools
+  array_relationships:
+  - name: school_lessons
+    using:
+      foreign_key_constraint_on:
+        column: school
+        table:
+          schema: public
+          name: school_lessons
+- table:
+    schema: public
+    name: user_school_lessons
+  object_relationships:
+    - name: school_lesson
+      using:
+        foreign_key_constraint_on: lesson
+    - name: userByUser
+      using:
+        foreign_key_constraint_on: user
+- table:
+    schema: public
+    name: users
+  array_relationships:
+  - name: user_school_lessons
+    using:
+      foreign_key_constraint_on:
+        column: user
+        table:
+          schema: public
+          name: user_school_lessons

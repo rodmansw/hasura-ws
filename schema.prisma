@@ -1,0 +1,57 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model categories {
+  description       String?
+  id                String              @default(dbgenerated()) @id
+  title             String
+  lesson_categories lesson_categories[]
+}
+
+model lesson_categories {
+  category       String
+  id             String         @default(dbgenerated()) @id
+  lesson         String
+  categories     categories     @relation(fields: [category], references: [id])
+  school_lessons school_lessons @relation(fields: [lesson], references: [id])
+}
+
+model school_lessons {
+  description         String?
+  id                  String                @default(dbgenerated()) @id
+  school              String
+  title               String
+  schools             schools               @relation(fields: [school], references: [id])
+  lesson_categories   lesson_categories[]
+  user_school_lessons user_school_lessons[]
+}
+
+model schools {
+  description    String?
+  id             String           @default(dbgenerated()) @id
+  title          String
+  school_lessons school_lessons[]
+}
+
+model users {
+  email               String                @unique
+  id                  String                @default(dbgenerated()) @id
+  name                String
+  password            String
+  surname             String
+  user_school_lessons user_school_lessons[]
+}
+
+model user_school_lessons {
+  id             String         @default(dbgenerated()) @id
+  lesson         String
+  user           String
+  school_lessons school_lessons @relation(fields: [lesson], references: [id])
+  users          users          @relation(fields: [user], references: [id])
+}
